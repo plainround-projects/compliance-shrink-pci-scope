@@ -1,0 +1,13 @@
+.git
+.venv
+.env
+state
+build
+evidence
+tests
+**/__pycache__
+.mypy_cache
+.ruff_cache
+.pytest_cache
+.coverage
+.omc
