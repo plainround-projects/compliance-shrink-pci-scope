@@ -8,7 +8,7 @@ The lesson uses a provider's hosted fields in test mode. That needs an account, 
 
 ## Decision
 
-Implement the provider's side locally, with the same shape as a Stripe-style API: customers, payment intents with a client secret, payment methods created from the browser with a publishable key, confirm, off-session charges, refunds and signed webhooks, plus a hosted card form served from the provider's origin. The merchant's `HttpProvider` speaks only that API, configured by `PROVIDER_BASE_URL` and test keys; settings refuse live keys.
+Implement the provider's side locally, with the same shape as a typical payment-intents API: customers, payment intents with a client secret, payment methods created from the browser with a publishable key, confirm, off-session charges, refunds and signed webhooks, plus a hosted card form served from the provider's origin. The merchant's `HttpProvider` speaks only that API, configured by `PROVIDER_BASE_URL` and test keys; settings refuse live keys.
 
 ## Alternatives considered
 
