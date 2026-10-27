@@ -90,6 +90,236 @@ def reaches_provider(exchanges: list[Exchange], provider: str) -> bool:
 The second half of the proof: the card fields **did** go somewhere, and that somewhere is the provider. Without it, "no card data reaches us" could be true because
 the test never sent a card at all.
 
+### The complete file `evidence/payment.har`, line by line
+
+`evidence/payment.har` lines 1 to 106:
+
+```json
+{
+  "log": {
+    "version": "1.2",
+    "creator": {
+      "name": "pci-scope browser simulator",
+      "version": "0.1"
+    },
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://127.0.0.1:5000/",
+          "postData": {
+            "text": ""
+          }
+        },
+        "response": {
+          "status": 200
+        }
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://127.0.0.1:5000/static/checkout.js",
+          "postData": {
+            "text": ""
+          }
+        },
+        "response": {
+          "status": 200
+        }
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://127.0.0.1:5001/v1/elements.js",
+          "postData": {
+            "text": ""
+          }
+        },
+        "response": {
+          "status": 200
+        }
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://127.0.0.1:5000/create-payment",
+          "postData": {
+            "text": ""
+          }
+        },
+        "response": {
+          "status": 200
+        }
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://127.0.0.1:5001/frame?origin=http%3A//127.0.0.1%3A5000&client_secret=pi_a1ce9a370c7b1637c72cfbd3_secret_1663591967aea86d",
+          "postData": {
+            "text": ""
+          }
+        },
+        "response": {
+          "status": 200
+        }
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://127.0.0.1:5001/v1/payment_methods",
+          "postData": {
+            "text": "card%5Bnumber%5D=[redacted]&card%5Bexp_month%5D=[redacted]&card%5Bexp_year%5D=[redacted]&card%5Bcvc%5D=[redacted]"
+          }
+        },
+        "response": {
+          "status": 200
+        }
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://127.0.0.1:5001/v1/payment_intents/pi_a1ce9a370c7b1637c72cfbd3/confirm",
+          "postData": {
+            "text": "client_secret=[redacted]&payment_method=[redacted]"
+          }
+        },
+        "response": {
+          "status": 200
+        }
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://127.0.0.1:5000/done?payment_intent=pi_a1ce9a370c7b1637c72cfbd3",
+          "postData": {
+            "text": ""
+          }
+        },
+        "response": {
+          "status": 200
+        }
+      }
+    ]
+  }
+```
+
+> **In plain words.** JSON is a text format for data: `{...}` is an object of named values, `[...]` a list, text is in double quotes. HAR (HTTP Archive) is JSON that records web requests and answers.
+
+- `{` opens or closes a group.
+- The key `log` holds an object (a group of named values) that starts here.
+- The key `version` holds the value `"1.2"`.
+- The key `creator` holds an object (a group of named values) that starts here.
+- The key `name` holds the value `"pci-scope browser simulator"`.
+- The key `version` holds the value `"0.1"`.
+- `},` opens or closes a group.
+- The key `entries` holds a list that starts here.
+- `{` opens or closes a group.
+- The key `request` holds an object (a group of named values) that starts here.
+- The key `method` holds the value `"GET"`.
+- The key `url` holds the value `"http://127.0.0.1:5000/"`.
+- The key `postData` holds an object (a group of named values) that starts here.
+- The key `text` holds the value `""`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- The key `response` holds an object (a group of named values) that starts here.
+- The key `status` holds the value `200`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- `{` opens or closes a group.
+- The key `request` holds an object (a group of named values) that starts here.
+- The key `method` holds the value `"GET"`.
+- The key `url` holds the value `"http://127.0.0.1:5000/static/checkout.js"`.
+- The key `postData` holds an object (a group of named values) that starts here.
+- The key `text` holds the value `""`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- The key `response` holds an object (a group of named values) that starts here.
+- The key `status` holds the value `200`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- `{` opens or closes a group.
+- The key `request` holds an object (a group of named values) that starts here.
+- The key `method` holds the value `"GET"`.
+- The key `url` holds the value `"http://127.0.0.1:5001/v1/elements.js"`.
+- The key `postData` holds an object (a group of named values) that starts here.
+- The key `text` holds the value `""`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- The key `response` holds an object (a group of named values) that starts here.
+- The key `status` holds the value `200`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- `{` opens or closes a group.
+- The key `request` holds an object (a group of named values) that starts here.
+- The key `method` holds the value `"POST"`.
+- The key `url` holds the value `"http://127.0.0.1:5000/create-payment"`.
+- The key `postData` holds an object (a group of named values) that starts here.
+- The key `text` holds the value `""`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- The key `response` holds an object (a group of named values) that starts here.
+- The key `status` holds the value `200`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- `{` opens or closes a group.
+- The key `request` holds an object (a group of named values) that starts here.
+- The key `method` holds the value `"GET"`.
+- The key `url` holds the value `"http://127.0.0.1:5001/frame?origin=http%3A//127.0.0.1%3A5000&client_…`.
+- The key `postData` holds an object (a group of named values) that starts here.
+- The key `text` holds the value `""`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- The key `response` holds an object (a group of named values) that starts here.
+- The key `status` holds the value `200`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- `{` opens or closes a group.
+- The key `request` holds an object (a group of named values) that starts here.
+- The key `method` holds the value `"POST"`.
+- The key `url` holds the value `"http://127.0.0.1:5001/v1/payment_methods"`.
+- The key `postData` holds an object (a group of named values) that starts here.
+- The key `text` holds the value `"card%5Bnumber%5D=[redacted]&card%5Bexp_month%5D=[redacted]&card%5Bex…`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- The key `response` holds an object (a group of named values) that starts here.
+- The key `status` holds the value `200`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- `{` opens or closes a group.
+- The key `request` holds an object (a group of named values) that starts here.
+- The key `method` holds the value `"POST"`.
+- The key `url` holds the value `"http://127.0.0.1:5001/v1/payment_intents/pi_a1ce9a370c7b1637c72cfbd3…`.
+- The key `postData` holds an object (a group of named values) that starts here.
+- The key `text` holds the value `"client_secret=[redacted]&payment_method=[redacted]"`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- The key `response` holds an object (a group of named values) that starts here.
+- The key `status` holds the value `200`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- `{` opens or closes a group.
+- The key `request` holds an object (a group of named values) that starts here.
+- The key `method` holds the value `"GET"`.
+- The key `url` holds the value `"http://127.0.0.1:5000/done?payment_intent=pi_a1ce9a370c7b1637c72cfbd…`.
+- The key `postData` holds an object (a group of named values) that starts here.
+- The key `text` holds the value `""`.
+- `}` opens or closes a group.
+- `},` opens or closes a group.
+- The key `response` holds an object (a group of named values) that starts here.
+- The key `status` holds the value `200`.
+- `}` opens or closes a group.
+- `}` opens or closes a group.
+- `]` opens or closes a group.
+- `}` opens or closes a group.
+
+`evidence/payment.har` lines 107 to 107:
+
+```json
+}
+```
+
+- `}` opens or closes a group.
+
 ## Try it yourself
 
 ```bash

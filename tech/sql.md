@@ -72,6 +72,107 @@ Indexes on the columns used to look orders up.
 
 The app's insert; the `?` are placeholders, and `'pending'` is a literal inside the statement.
 
+### The complete file `sql/001_schema.sql`, line by line
+
+`sql/001_schema.sql` lines 1 to 15:
+
+```sql
+-- DDL for the merchant's order table (SQLite). Apply with: sqlite3 state/merchant.db < sql/001_schema.sql   (make db does this)
+-- Every payment column is a provider token. The GLOB checks make a card number structurally impossible in them: a value
+-- such as 4242424242424242 does not start with 'pm_', so the database refuses it.
+CREATE TABLE IF NOT EXISTS orders (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    payment_intent_id TEXT    NOT NULL UNIQUE CHECK (payment_intent_id GLOB 'pi_*'),
+    amount_cents      INTEGER NOT NULL CHECK (amount_cents > 0),
+    currency          TEXT    NOT NULL CHECK (length(currency) = 3),
+    status            TEXT    NOT NULL CHECK (status IN ('pending', 'succeeded', 'failed', 'refunded')),
+    customer_id       TEXT    NOT NULL DEFAULT '' CHECK (customer_id = '' OR customer_id GLOB 'cus_*'),
+    payment_method_id TEXT    NOT NULL DEFAULT '' CHECK (payment_method_id = '' OR payment_method_id GLOB 'pm_*'),
+    created_at        TEXT    NOT NULL
+);
+CREATE INDEX IF NOT EXISTS orders_customer_idx ON orders (customer_id);
+CREATE INDEX IF NOT EXISTS orders_status_idx ON orders (status);
+```
+
+> **In plain words.** SQL statements end with a semicolon; `--` starts a comment. A **table** is a grid of rows and columns. A **constraint** (`NOT NULL`, `UNIQUE`, `CHECK`, `REFERENCES`) makes the database refuse bad data. An **index** speeds up lookups. A **query** (`SELECT`) reads rows.
+
+- Creates the table `orders` if it does not exist yet. Its columns:
+  - `id` of type `INTEGER`: the primary key (unique row identity).
+  - `payment_intent_id` of type `TEXT`: required, never repeated, must satisfy `payment_intent_id GLOB 'pi_*'`.
+  - `amount_cents` of type `INTEGER`: required, must satisfy `amount_cents > 0`.
+  - `currency` of type `TEXT`: required, must satisfy `length(currency) = 3`.
+  - `status` of type `TEXT`: required, must satisfy `status IN ('pending', 'succeeded', 'failed', 'refunded')`.
+  - `customer_id` of type `TEXT`: required, defaults to `''`, must satisfy `customer_id = '' OR customer_id GLOB 'cus_*'`.
+  - `payment_method_id` of type `TEXT`: required, defaults to `''`, must satisfy `payment_method_id = '' OR payment_method_id GLOB 'pm_*'`.
+  - `created_at` of type `TEXT`: required.
+- Builds an **index**, a sorted lookup structure that lets the database find rows without reading the whole table: `CREATE INDEX IF NOT EXISTS orders_customer_idx ON orders (customer_id)`.
+- Builds an **index**, a sorted lookup structure that lets the database find rows without reading the whole table: `CREATE INDEX IF NOT EXISTS orders_status_idx ON orders (status)`.
+
+### The complete file `sql/002_seed.sql`, line by line
+
+`sql/002_seed.sql` lines 1 to 4:
+
+```sql
+-- DML: two made-up orders so the queries have something to show. The tokens are invented; no card exists behind them.
+INSERT OR IGNORE INTO orders (payment_intent_id, amount_cents, currency, status, customer_id, payment_method_id, created_at) VALUES
+    ('pi_0123456789abcdef01234567', 1900, 'eur', 'succeeded', 'cus_0123456789abcdef01234567', 'pm_0123456789abcdef01234567', '2026-10-26T09:00:00Z'),
+    ('pi_89abcdef0123456789abcdef', 1900, 'eur', 'refunded', 'cus_0123456789abcdef01234567', 'pm_0123456789abcdef01234567', '2026-10-26T09:05:00Z');
+```
+
+> **In plain words.** SQL statements end with a semicolon; `--` starts a comment. A **table** is a grid of rows and columns. A **constraint** (`NOT NULL`, `UNIQUE`, `CHECK`, `REFERENCES`) makes the database refuse bad data. An **index** speeds up lookups. A **query** (`SELECT`) reads rows.
+
+- `INSERT OR IGNORE INTO orders (payment_intent_id, amount_cents, currency, status, customer_id, payment_method_id, created_at) VALUES ('pi_01…`.
+
+### The complete file `sql/003_queries.sql`, line by line
+
+`sql/003_queries.sql` lines 1 to 1:
+
+```sql
+-- The queries behind the proof and the repeat charge, each with a line on what it shows. Run with: make queries
+```
+
+> **In plain words.** SQL statements end with a semicolon; `--` starts a comment. A **table** is a grid of rows and columns. A **constraint** (`NOT NULL`, `UNIQUE`, `CHECK`, `REFERENCES`) makes the database refuse bad data. An **index** speeds up lookups. A **query** (`SELECT`) reads rows.
+
+- These lines are comments written by the author (`--` starts a comment); they are quoted above.
+
+`sql/003_queries.sql` lines 3 to 4:
+
+```sql
+-- What the table can hold: every column and its type. No column is a card number, a CVV or an expiry.
+SELECT name, type FROM pragma_table_info('orders');
+```
+
+- A **query**: it reads data and returns rows. `SELECT name, type FROM pragma_table_info('orders')`.
+
+`sql/003_queries.sql` lines 6 to 9:
+
+```sql
+-- The proof, in SQL: values in any column that look like a card number (13 to 19 digits). Expect no rows.
+SELECT id, payment_intent_id FROM orders
+WHERE payment_intent_id GLOB '*[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]*'
+   OR customer_id GLOB '[0-9]*' OR payment_method_id GLOB '[0-9]*';
+```
+
+- A **query**: it reads data and returns rows. `SELECT id, payment_intent_id FROM orders WHERE payment_intent_id GLOB '*[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0…`.
+
+`sql/003_queries.sql` lines 11 to 12:
+
+```sql
+-- A repeat charge needs only these two tokens.
+SELECT customer_id, payment_method_id FROM orders WHERE status = 'succeeded' AND payment_method_id <> '' LIMIT 1;
+```
+
+- A **query**: it reads data and returns rows. `SELECT customer_id, payment_method_id FROM orders WHERE status = 'succeeded' AND payment_method_id <> '' LIMIT 1`.
+
+`sql/003_queries.sql` lines 14 to 15:
+
+```sql
+-- Revenue by status, to see refunds.
+SELECT status, count(*) AS orders, sum(amount_cents) / 100.0 AS total FROM orders GROUP BY status ORDER BY status;
+```
+
+- A **query**: it reads data and returns rows. `SELECT status, count(*) AS orders, sum(amount_cents) / 100.0 AS total FROM orders GROUP BY status ORDER BY status`.
+
 ## Try it yourself
 
 ```bash

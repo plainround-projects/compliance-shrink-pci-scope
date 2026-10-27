@@ -257,6 +257,286 @@ clean: down
 `down` deletes generated output. `clean` has `down` as a prerequisite and also deletes the virtual environment and
 every cache folder. `rm -rf` removes a folder and everything in it without asking.
 
+### The complete file `Makefile`, line by line
+
+`Makefile` lines 1 to 6:
+
+```make
+# make up | run | test | lint | audit | check | down   (make help lists all)
+PYTHON ?= $(shell command -v python3.13 || command -v python3.12 || command -v python3)
+VENV := .venv
+PY := $(VENV)/bin/python
+STAMP := $(VENV)/.installed
+CLI := $(VENV)/bin/pci-scope
+```
+
+> **In plain words.** A Makefile is a list of **rules**. A rule has a target (a name), the things it needs first, and a recipe (shell commands, each line starting with a tab). `make name` runs the recipe after making sure the needs are ready. `$(NAME)` means "the value of the Make variable NAME"; `$@` means "this rule's target".
+
+- Sets the Make variable `PYTHON` only if it is not already set to `$(shell command -v python3.13 || command -v python3.12 || command -v python3)`. The `$(shell ...)` part runs a shell command and uses its output.
+- Sets the Make variable `VENV` once, right now to `.venv`.
+- Sets the Make variable `PY` once, right now to `$(VENV)/bin/python`.
+- Sets the Make variable `STAMP` once, right now to `$(VENV)/.installed`.
+- Sets the Make variable `CLI` once, right now to `$(VENV)/bin/pci-scope`.
+
+`Makefile` lines 8 to 9:
+
+```make
+-include .env
+export
+```
+
+- `-include .env` reads that file if it exists; the leading `-` means "do not fail if it is missing". Its `NAME=value` lines become Make variables.
+- `export` on its own passes every Make variable to the programs Make starts, so they see the settings from `.env`.
+
+`Makefile` lines 11 to 12:
+
+```make
+.PHONY: help install env up db run verify scope scan queries serve-provider serve-merchant serve-naive docker-build test \
+        test-e2e lint format audit check down clean
+```
+
+- `.PHONY` lists names that are commands, not files, so Make always runs them even if a file of that name exists.
+
+`Makefile` lines 14 to 15:
+
+```make
+help: ## list the targets
+	@grep -hE '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | sed -E 's/:.*## /\t/' | sort
+```
+
+- Defines the target `help`. It has no prerequisites. Its help text is "list the targets".
+- Recipe line: runs grep, which searches text with `-hE` (hide file names, extended regex), `^[a-z-]+:.*##`, `$(MAKEFILE_LIST)`; then its output is passed to a command that runs sed, the stream editor with `-E` (extended regular expressions), `s/:.*## /\t/`; then its output is passed to a command that runs sort, which orders lines. (the leading `@` stops Make from printing the command first)
+
+`Makefile` lines 17 to 21:
+
+```make
+$(STAMP): requirements-dev.lock pyproject.toml
+	$(PYTHON) -m venv $(VENV)
+	$(VENV)/bin/pip install -q --require-hashes -r requirements-dev.lock
+	$(VENV)/bin/pip install -q --no-deps -e .
+	touch $@
+```
+
+- Defines the target `$(STAMP)`. It needs `requirements-dev.lock pyproject.toml` to be ready first.
+- Recipe line: runs `venv` with `$(VENV)` (run through Python with `-m`).
+- Recipe line: runs pip, the package installer, subcommand `install` with `-q` (quiet: print less), `--require-hashes` (refuse any package without a pinned hash), `-r requirements-dev.lock` (read the list from the named file).
+- Recipe line: runs pip, the package installer, subcommand `install` with `-q` (quiet: print less), `--no-deps` (do not install or resolve dependencies), `-e` (editable install (link to the source) / extended regex / stop on error, by program), `.`.
+- Recipe line: runs touch, which creates an empty file or refreshes its date with `$@`.
+
+`Makefile` lines 23 to 23:
+
+```make
+install: $(STAMP) ## create .venv from the hash-pinned lock file
+```
+
+- Defines the target `install`. It needs `$(STAMP)` to be ready first. Its help text is "create .venv from the hash-pinned lock file".
+
+`Makefile` lines 25 to 26:
+
+```make
+env:
+	@[ -f .env ] || { cp .env.example .env; echo "created .env from .env.example"; }
+```
+
+- Defines the target `env`. It has no prerequisites.
+- Recipe line: tests a condition: `-f .env`; if that fails, it runs cp, which copies files with `.env.example`, `.env`; then it prints `created .env from .env.example`. (the leading `@` stops Make from printing the command first)
+
+`Makefile` lines 28 to 28:
+
+```make
+up: env $(STAMP) ## prepare the environment (there are no services to start)
+```
+
+- Defines the target `up`. It needs `env $(STAMP)` to be ready first. Its help text is "prepare the environment (there are no services to start)".
+
+`Makefile` lines 30 to 31:
+
+```make
+db: $(STAMP) ## create the merchant's order table with sql/001_schema.sql and the sample rows of sql/002_seed.sql
+	$(CLI) db
+```
+
+- Defines the target `db`. It needs `$(STAMP)` to be ready first. Its help text is "create the merchant's order table with sql/001_schema.sql and the sample rows of sql/002_seed.sql".
+- Recipe line: runs the project's command-line program with the subcommand `db`.
+
+`Makefile` lines 33 to 34:
+
+```make
+run: up ## the lesson's scenario: naive checkout, redesign, proof, scope, evidence pack, verification
+	$(CLI) demo
+```
+
+- Defines the target `run`. It needs `up` to be ready first. Its help text is "the lesson's scenario: naive checkout, redesign, proof, scope, evidence pack, verification".
+- Recipe line: runs the project's command-line program with the subcommand `demo`.
+
+`Makefile` lines 36 to 37:
+
+```make
+verify: $(STAMP) ## check that every requirement maps to evidence and every file says what it should
+	$(CLI) verify
+```
+
+- Defines the target `verify`. It needs `$(STAMP)` to be ready first. Its help text is "check that every requirement maps to evidence and every file says what it should".
+- Recipe line: runs the project's command-line program with the subcommand `verify`.
+
+`Makefile` lines 39 to 40:
+
+```make
+scope: $(STAMP) ## print the cardholder data environment before and after, and what changed
+	$(CLI) scope
+```
+
+- Defines the target `scope`. It needs `$(STAMP)` to be ready first. Its help text is "print the cardholder data environment before and after, and what changed".
+- Recipe line: runs the project's command-line program with the subcommand `scope`.
+
+`Makefile` lines 42 to 43:
+
+```make
+scan: $(STAMP) ## search a folder for card numbers: make scan PATHS="state evidence"
+	$(CLI) scan $(PATHS)
+```
+
+- Defines the target `scan`. It needs `$(STAMP)` to be ready first. Its help text is "search a folder for card numbers: make scan PATHS="state evidence"".
+- Recipe line: runs the project's command-line program with the subcommand `scan` with `$(PATHS)`.
+
+`Makefile` lines 45 to 46:
+
+```make
+queries: db ## run sql/003_queries.sql against the sample database
+	sqlite3 $(DATABASE_PATH) < sql/003_queries.sql
+```
+
+- Defines the target `queries`. It needs `db` to be ready first. Its help text is "run sql/003_queries.sql against the sample database".
+- Recipe line: runs the SQLite command-line shell with `$(DATABASE_PATH)`, reading its input from `sql/003_queries.sql`.
+
+`Makefile` lines 48 to 49:
+
+```make
+serve-provider: $(STAMP) ## run the local payment provider on its port
+	$(CLI) serve provider
+```
+
+- Defines the target `serve-provider`. It needs `$(STAMP)` to be ready first. Its help text is "run the local payment provider on its port".
+- Recipe line: runs the project's command-line program with the subcommand `serve` with `provider`.
+
+`Makefile` lines 51 to 52:
+
+```make
+serve-merchant: $(STAMP) ## run the redesigned merchant on its port
+	$(CLI) serve merchant
+```
+
+- Defines the target `serve-merchant`. It needs `$(STAMP)` to be ready first. Its help text is "run the redesigned merchant on its port".
+- Recipe line: runs the project's command-line program with the subcommand `serve` with `merchant`.
+
+`Makefile` lines 54 to 55:
+
+```make
+serve-naive: $(STAMP) ## run the naive checkout (to be measured, test card only)
+	$(CLI) serve naive
+```
+
+- Defines the target `serve-naive`. It needs `$(STAMP)` to be ready first. Its help text is "run the naive checkout (to be measured, test card only)".
+- Recipe line: runs the project's command-line program with the subcommand `serve` with `naive`.
+
+`Makefile` lines 57 to 58:
+
+```make
+docker-build: ## build the image of the three apps
+	docker build -t compliance-shrink-pci-scope:dev .
+```
+
+- Defines the target `docker-build`. It has no prerequisites. Its help text is "build the image of the three apps".
+- Recipe line: runs Docker with the subcommand `build` with `-t compliance-shrink-pci-scope:dev` (tag (name) the image / tuples only, by program), `.`.
+
+`Makefile` lines 60 to 62:
+
+```make
+test: $(STAMP) ## unit tests with coverage (domain and application must stay at 95% or more)
+	$(PY) -m pytest tests/unit --cov=pci_scope --cov-report=term
+	$(PY) -m coverage report --include='src/pci_scope/domain/*,src/pci_scope/application/*' --fail-under=95
+```
+
+- Defines the target `test`. It needs `$(STAMP)` to be ready first. Its help text is "unit tests with coverage (domain and application must stay at 95% or more)".
+- Recipe line: runs pytest, the test runner with `tests/unit`, `--cov=pci_scope` (measure coverage of this package), `--cov-report=term` (how to print the coverage report) (run through the project's Python with `-m`).
+- Recipe line: runs coverage.py, which measures which lines the tests ran with `report`, `--include=src/pci_scope/domain/*,src/pci_scope/application/*` (only these files), `--fail-under=95` (exit with an error if the total is lower than this percent) (run through the project's Python with `-m`).
+
+`Makefile` lines 64 to 65:
+
+```make
+test-e2e: $(STAMP) ## the scenario against real local servers (provider, merchant, naive)
+	$(PY) -m pytest tests/e2e -m e2e
+```
+
+- Defines the target `test-e2e`. It needs `$(STAMP)` to be ready first. Its help text is "the scenario against real local servers (provider, merchant, naive)".
+- Recipe line: runs pytest, the test runner with `tests/e2e`, `-m e2e` (run a module (or select tests by marker for pytest)) (run through the project's Python with `-m`).
+
+`Makefile` lines 67 to 71:
+
+```make
+lint: $(STAMP) ## ruff check, ruff format check, mypy, import-linter
+	$(VENV)/bin/ruff check .
+	$(VENV)/bin/ruff format --check .
+	$(VENV)/bin/mypy
+	$(VENV)/bin/lint-imports
+```
+
+- Defines the target `lint`. It needs `$(STAMP)` to be ready first. Its help text is "ruff check, ruff format check, mypy, import-linter".
+- Recipe line: runs ruff, the linter and formatter with `check`, `.`.
+- Recipe line: runs ruff, the linter and formatter with `format`, `--check` (report only; change nothing), `.`.
+- Recipe line: runs mypy, the type checker.
+- Recipe line: runs import-linter, the architecture rule checker.
+
+`Makefile` lines 73 to 75:
+
+```make
+format: $(STAMP) ## apply ruff's formatting and safe fixes
+	$(VENV)/bin/ruff check --fix .
+	$(VENV)/bin/ruff format .
+```
+
+- Defines the target `format`. It needs `$(STAMP)` to be ready first. Its help text is "apply ruff's formatting and safe fixes".
+- Recipe line: runs ruff, the linter and formatter with `check`, `--fix` (apply the fixes that are safe), `.`.
+- Recipe line: runs ruff, the linter and formatter with `format`, `.`.
+
+`Makefile` lines 77 to 78:
+
+```make
+audit: $(STAMP) ## check the locked dependencies for known vulnerabilities
+	$(VENV)/bin/pip-audit --no-deps --disable-pip -r requirements-dev.lock
+```
+
+- Defines the target `audit`. It needs `$(STAMP)` to be ready first. Its help text is "check the locked dependencies for known vulnerabilities".
+- Recipe line: runs pip-audit, the vulnerability scanner with `--no-deps` (do not install or resolve dependencies), `--disable-pip` (do not use pip to resolve), `-r requirements-dev.lock` (read the list from the named file).
+
+`Makefile` lines 80 to 80:
+
+```make
+check: lint test ## everything CI runs apart from the audit
+```
+
+- Defines the target `check`. It needs `lint test` to be ready first. Its help text is "everything CI runs apart from the audit".
+
+`Makefile` lines 82 to 83:
+
+```make
+down: ## remove generated output (nothing is running)
+	rm -rf build
+```
+
+- Defines the target `down`. It has no prerequisites. Its help text is "remove generated output (nothing is running)".
+- Recipe line: runs rm, which deletes files with `-rf` (delete folders and everything inside without asking), `build`.
+
+`Makefile` lines 85 to 86:
+
+```make
+clean: down
+	rm -rf $(VENV) .pytest_cache .mypy_cache .ruff_cache .import_linter_cache .coverage htmlcov
+```
+
+- Defines the target `clean`. It needs `down` to be ready first.
+- Recipe line: runs rm, which deletes files with `-rf` (delete folders and everything inside without asking), `$(VENV)`, `.pytest_cache`, `.mypy_cache`, `.ruff_cache`, `.import_linter_cache`, `.coverage`, `htmlcov`.
+
 ## Try it yourself
 
 From the repository root:

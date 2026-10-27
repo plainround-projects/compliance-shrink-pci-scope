@@ -124,7 +124,7 @@ tests/
   unit/              domain, application (fake provider and orders), infrastructure, the apps over Flask's test client.
   e2e/               the scenario against real local servers.
 Dockerfile, docker-compose.yml   the provider and the merchant as containers (non-root, read-only, pinned base image).
-tech/                46 beginner notes, one per technology; start at tech/README.md.
+tech/                56 beginner notes, one per technology, with every source file quoted and explained line by line; start at tech/README.md.
 pyproject.toml       metadata and every tool's configuration.   requirements*.lock  hash-pinned dependencies.
 Makefile             the only commands a reader needs.          .github/workflows/ci.yml  the same checks on push.
 ```
