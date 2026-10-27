@@ -1,0 +1,124 @@
+title = "Before: the card number reaches the merchant's server"
+
+[[system]]
+id = "browser"
+name = "Customer browser"
+team = "customer"
+touches_card = true
+external = true
+
+[[system]]
+id = "web"
+name = "Web server (naive.py)"
+team = "developers"
+touches_card = true
+
+[[system]]
+id = "log"
+name = "Request log"
+team = "operations"
+
+[[system]]
+id = "shipping"
+name = "Log shipping"
+team = "operations"
+
+[[system]]
+id = "search"
+name = "Log search tool"
+team = "support"
+
+[[system]]
+id = "db"
+name = "Order database"
+team = "developers"
+
+[[system]]
+id = "bak"
+name = "Backups"
+team = "operations"
+
+[[system]]
+id = "ci"
+name = "CI/CD pipeline"
+team = "developers"
+
+[[system]]
+id = "admin"
+name = "Admin accounts"
+team = "operations"
+
+[[system]]
+id = "laptops"
+name = "Developer laptops that read logs"
+team = "developers"
+
+[[edge]]
+from = "browser"
+to = "web"
+kind = "data"
+
+[[edge]]
+from = "web"
+to = "log"
+kind = "data"
+
+[[edge]]
+from = "log"
+to = "shipping"
+kind = "data"
+
+[[edge]]
+from = "shipping"
+to = "search"
+kind = "data"
+
+[[edge]]
+from = "web"
+to = "db"
+kind = "data"
+
+[[edge]]
+from = "db"
+to = "bak"
+kind = "data"
+
+[[edge]]
+from = "log"
+to = "bak"
+kind = "data"
+
+[[edge]]
+from = "search"
+to = "laptops"
+kind = "data"
+
+[[edge]]
+from = "ci"
+to = "web"
+kind = "control"
+
+[[edge]]
+from = "admin"
+to = "web"
+kind = "control"
+
+[[edge]]
+from = "admin"
+to = "log"
+kind = "control"
+
+[[edge]]
+from = "admin"
+to = "search"
+kind = "control"
+
+[[edge]]
+from = "admin"
+to = "db"
+kind = "control"
+
+[[edge]]
+from = "admin"
+to = "bak"
+kind = "control"

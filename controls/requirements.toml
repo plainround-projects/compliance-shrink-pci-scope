@@ -1,0 +1,97 @@
+# What the redesign must show for a reduced-scope assessment, and the evidence for each. `pci-scope verify` fails when a
+# requirement has no evidence and no tracked gap, a file is missing, empty, edited by hand, or does not say what the
+# requirement needs. Requirement ids are this repository's own; they are not PCI DSS requirement numbers.
+
+[[requirement]]
+id = "P1"
+text = "Card data never reaches the merchant: the card fields go from the browser to the provider only."
+
+  [[requirement.evidence]]
+  file = "payment.har"
+  kind = "har"
+  proves = "the captured browser traffic: no request to the merchant carries a card field or number, and the card fields went to the provider"
+
+  [[requirement.evidence]]
+  file = "payment-summary.txt"
+  kind = "har_summary"
+  proves = "the same capture, one line per request with where it went"
+
+  [[requirement.evidence]]
+  file = "proof-after.txt"
+  kind = "scan_after"
+  proves = "a scan of the merchant's log, database and backups for card numbers and card fields, and the lesson's grep commands, all empty"
+
+[[requirement]]
+id = "P2"
+text = "The old route that accepted card details is gone."
+
+  [[requirement.evidence]]
+  file = "route-check.txt"
+  kind = "routes"
+  proves = "POST and GET /pay on the merchant answer 404"
+
+[[requirement]]
+id = "P3"
+text = "The scope before and after is drawn, and the reduction is stated."
+
+  [[requirement.evidence]]
+  file = "scope-before.md"
+  kind = "scope"
+  proves = "the cardholder data environment of the naive checkout: 9 systems and 3 teams"
+
+  [[requirement.evidence]]
+  file = "scope-after.md"
+  kind = "scope"
+  proves = "the cardholder data environment after the redesign"
+
+  [[requirement.evidence]]
+  file = "scope-change.md"
+  kind = "scope_change"
+  proves = "what left scope and what stays"
+
+[[requirement]]
+id = "P4"
+text = "The problem was real: the naive checkout puts the card number in its log."
+
+  [[requirement.evidence]]
+  file = "proof-before.txt"
+  kind = "scan_before"
+  proves = "the same scan, run on the naive checkout after one test payment, finds the number"
+
+[[requirement]]
+id = "P5"
+text = "Only tokens are stored."
+
+  [[requirement.evidence]]
+  file = "token-storage.txt"
+  kind = "tokens"
+  proves = "the order table's columns, sample rows holding only pi_, cus_ and pm_ tokens, and the check for card-number columns"
+
+[[requirement]]
+id = "P6"
+text = "The payment page stays controlled, and what is still ours is written down."
+
+  [[requirement.evidence]]
+  file = "checkout-page-controls.txt"
+  kind = "headers"
+  proves = "the content security policy of the payment page and the inventory of the scripts and frames it loads"
+
+  [[requirement.evidence]]
+  file = "responsibilities.md"
+  kind = "responsibilities"
+  proves = "what is now the provider's and what is still the merchant's"
+
+[[requirement]]
+id = "P7"
+text = "The provider is itself compliant, shown by its attestation of compliance."
+
+  [[requirement.evidence]]
+  file = "provider-attestation.md"
+  kind = "attestation"
+  proves = "the record of the provider's attestation of compliance, its date and the services it covers"
+
+[[gap]]
+requirement = "P7"
+reason = "This build uses a local stand-in for the provider, which has no attestation. With a real provider, download its attestation of compliance, record its date and services here, and close this gap."
+ticket = "PCI-1"
+due = 2026-12-01
