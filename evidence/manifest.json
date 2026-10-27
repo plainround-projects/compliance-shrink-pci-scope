@@ -1,0 +1,67 @@
+{
+  "INDEX.md": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "-",
+    "sha256": "1847b18af4c05153bcc2e3f33122d4552950bf4428db491982af49b8a667ae2d"
+  },
+  "checkout-page-controls.txt": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P6",
+    "sha256": "919c6ecf1e9230da9e8420db4862e3a111a21da67fb7a3867b53add71484b3e1"
+  },
+  "payment-summary.txt": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P1",
+    "sha256": "942faaaabb4782b0649b80d8b6915d7ed7290baf4bbb2c542655527480ca88b7"
+  },
+  "payment.har": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P1",
+    "sha256": "2c7d1c7027e76295037e6f21fcc9108230fae5d6dd62fb219f00fe03b3075192"
+  },
+  "proof-after.txt": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P1",
+    "sha256": "a5916083edf01332ca872dbabf697ba7dc02ece9c7eb975100d9c8e41b745b9a"
+  },
+  "proof-before.txt": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P4",
+    "sha256": "76f955d91d82e3812fc3da2407a4af3958ea1b6bab2e911f7700e689daa49528"
+  },
+  "provider-attestation.md": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P7",
+    "sha256": "8a726c7a1fafcf86caa0d8f12024ae0d0eddf9f8279b217ae26fc72d9fd6bc20"
+  },
+  "responsibilities.md": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P6",
+    "sha256": "e9d1120d7b6b56f30158eebf9c3d571dd776c64c66cf2fedec968fd2d8add984"
+  },
+  "route-check.txt": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P2",
+    "sha256": "1f97b02f5392958537cf98905871f7ebf47a43e78620c4e201146fa1fa9c7a12"
+  },
+  "scope-after.md": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P3",
+    "sha256": "3f7d947249a98ec5d9ed210beda1c832e0468d67427dc0295ade57c1f3521592"
+  },
+  "scope-before.md": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P3",
+    "sha256": "13d4f9ccdd78afab46db50b62d91991053053cc6ba54f0c2442e4191deb739bb"
+  },
+  "scope-change.md": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P3",
+    "sha256": "2d4b94d61d131587c773f54ce600c671cdcc6173d777e9a7443124cdeeababf9"
+  },
+  "token-storage.txt": {
+    "produced_at": "2026-10-27T01:24:50Z",
+    "requirement": "P5",
+    "sha256": "d95869f2c107b32f3a627e5d873ca7ccd1c7ae8082a0ec16627f164dc43b43f1"
+  }
+}

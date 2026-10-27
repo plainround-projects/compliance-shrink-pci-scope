@@ -1,0 +1,8 @@
+GET  http://127.0.0.1:5000/  body: (empty)  -> your server
+GET  http://127.0.0.1:5000/static/checkout.js  body: (empty)  -> your server
+GET  http://127.0.0.1:5001/v1/elements.js  body: (empty)  -> the provider
+POST http://127.0.0.1:5000/create-payment  body: (empty)  -> your server
+GET  http://127.0.0.1:5001/frame?origin=http%3A//127.0.0.1%3A5000&client_secret=pi_a1ce9a370c7b1637c72cfbd3_secret_1663591967aea86d  body: (empty)  -> the provider
+POST http://127.0.0.1:5001/v1/payment_methods  card fields: card[cvc], card[exp_month], card[exp_year], card[number]  -> the provider
+POST http://127.0.0.1:5001/v1/payment_intents/pi_a1ce9a370c7b1637c72cfbd3/confirm  body: no card fields  -> the provider
+GET  http://127.0.0.1:5000/done?payment_intent=pi_a1ce9a370c7b1637c72cfbd3  body: (empty)  -> your server

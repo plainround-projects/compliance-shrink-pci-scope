@@ -1,0 +1,3 @@
+routes that accepted card details in the naive checkout, probed on the merchant:
+POST /pay -> 404
+GET /pay -> 404

@@ -1,0 +1,13 @@
+order table columns:
+  id INTEGER
+  payment_intent_id TEXT
+  amount_cents INTEGER
+  currency TEXT
+  status TEXT
+  customer_id TEXT
+  payment_method_id TEXT
+  created_at TEXT
+sample rows (id, payment intent, status, customer, payment method):
+  (1, 'pi_a1ce9a370c7b1637c72cfbd3', 'succeeded', 'cus_0bf0bb3b539b6f2857036457', 'pm_a5652d470e6f54e5ec820458')
+  (2, 'pi_7ff520d787e677f496f32199', 'refunded', 'cus_0bf0bb3b539b6f2857036457', 'pm_a5652d470e6f54e5ec820458')
+card number columns: none

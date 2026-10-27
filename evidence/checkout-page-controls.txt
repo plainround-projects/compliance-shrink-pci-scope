@@ -1,0 +1,11 @@
+payment page controls: GET http://127.0.0.1:5000/ -> 200
+content-security-policy: default-src 'self'; script-src 'self' http://127.0.0.1:5001; frame-src http://127.0.0.1:5001; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'
+x-content-type-options: nosniff
+referrer-policy: no-referrer
+cache-control: no-store
+
+script inventory (the scripts and frames the page loads):
+  script  http://127.0.0.1:5001/v1/elements.js  (the provider's)
+  script  /static/checkout.js  (ours)
+  frame   http://127.0.0.1:5001/frame  (created by the provider's script, served by the provider)
+card input fields on the merchant's page: none

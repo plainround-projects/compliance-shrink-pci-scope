@@ -1,0 +1,12 @@
+scanning the merchant's side after the same payment, a repeat charge and a refund:
+  merchant.db (SQL dump) ... clean
+  backups/merchant-backup.sql ... clean
+  merchant/app.log ... clean
+scanned 3 artifact(s): 0 findings
+exit=0
+
+the lesson's own checks, on the same places (grep exits 1 when nothing is found; -a reads SQLite too):
+$ grep -rnaE '4242[ -]?4242[ -]?4242[ -]?4242' merchant.db merchant backups
+exit=1  (no card number found)
+$ grep -rnaE -i 'cvv|cvc|card_number' merchant.db merchant backups
+exit=1  (no card field found)
