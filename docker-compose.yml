@@ -1,0 +1,42 @@
+# The provider and the merchant as two containers. The browser talks to both on localhost; the merchant reaches the
+# provider by its service name. Open http://127.0.0.1:5000 after `docker compose up --build`.
+# The naive checkout is not here on purpose: run it with `make serve-naive`, test card only.
+x-common: &common
+  build: .
+  read_only: true
+  tmpfs: ["/tmp"]
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  environment: &env
+    PROVIDER_SECRET_KEY: ${PROVIDER_SECRET_KEY:?set it in .env}
+    PROVIDER_PUBLISHABLE_KEY: ${PROVIDER_PUBLISHABLE_KEY:?set it in .env}
+    WEBHOOK_SECRET: ${WEBHOOK_SECRET:?set it in .env}
+    PROVIDER_BASE_URL: http://provider:5001
+    PROVIDER_PUBLIC_URL: http://127.0.0.1:5001
+    MERCHANT_BASE_URL: http://merchant:5000
+
+services:
+  provider:
+    <<: *common
+    environment:
+      <<: *env
+      APP: provider
+      PORT: "5001"
+    ports:
+      - "127.0.0.1:5001:5001"
+  merchant:
+    <<: *common
+    depends_on:
+      - provider
+    environment:
+      <<: *env
+      APP: merchant
+      PORT: "5000"
+      DATABASE_PATH: /app/state/merchant.db
+    volumes:
+      - merchant-state:/app/state
+    ports:
+      - "127.0.0.1:5000:5000"
+
+volumes:
+  merchant-state:
