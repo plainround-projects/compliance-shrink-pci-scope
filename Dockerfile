@@ -21,5 +21,5 @@ USER app
 
 ENV APP=merchant PORT=5000
 EXPOSE 5000
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD ["python", "-c", "import os, urllib.request; urllib.request.urlopen(f'http://127.0.0.1:{os.environ[\"PORT\"]}/healthz' if os.environ['APP'] != 'naive' else f'http://127.0.0.1:{os.environ[\"PORT\"]}/', timeout=3)"]
-CMD ["sh", "-c", "exec gunicorn --bind 0.0.0.0:$PORT --workers $([ \"$APP\" = provider ] && echo 1 || echo 2) --threads 8 --timeout 30 --graceful-timeout 20 \"pci_scope.interfaces.factories:$APP()\""]
+HEALTHCHECK --interval=30s --timeout=20s --start-period=30s --retries=3 CMD ["python", "-c", "import os, urllib.request; urllib.request.urlopen(f'http://127.0.0.1:{os.environ[\"PORT\"]}/healthz' if os.environ['APP'] != 'naive' else f'http://127.0.0.1:{os.environ[\"PORT\"]}/', timeout=3)"]
+CMD ["sh", "-c", "exec gunicorn --bind 0.0.0.0:$PORT --workers $([ \"$APP\" = provider ] && echo 1 || echo 2) --threads 8 --timeout 30 --graceful-timeout 20 --no-control-socket \"pci_scope.interfaces.factories:$APP()\""]
