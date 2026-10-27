@@ -1,4 +1,4 @@
-"""The payment provider over HTTP: a form-encoded payment-intents style REST API with a timeout and retries on every call."""
+"""The payment provider over HTTP: a form-encoded payment-intents style API, with a timeout and retries on each call."""
 
 from __future__ import annotations
 
