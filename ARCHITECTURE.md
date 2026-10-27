@@ -77,7 +77,7 @@ flowchart LR
 ## Limits of the teaching build against a production one
 
 - The provider is a stand-in with in-memory state; a real one is a separate, audited service.
-- The scripted browser does not run JavaScript, so a break in `checkout.js` or the provider's script would not be seen by the tests (README, simplified for teaching).
+- The scripted browser does not run JavaScript, so a break in `checkout.js` or the provider's script would not be seen by the tests; both were checked once by hand in a real browser (README, simplified for teaching).
 - A real assessment depends on the merchant level and the integration type (the questionnaire for a fully outsourced page differs from one for a page that handles card fields); this repository stops at the evidence and names that as the owner's next step.
 - Page integrity beyond a content security policy (script allow-listing and change detection on the payment page) is listed in `responsibilities.md`, not built.
 - Tokens are stored in clear in a SQLite file; a production store encrypts them at rest.
