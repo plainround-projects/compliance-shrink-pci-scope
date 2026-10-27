@@ -124,11 +124,16 @@ tests/
   unit/              domain, application (fake provider and orders), infrastructure, the apps over Flask's test client.
   e2e/               the scenario against real local servers.
 Dockerfile, docker-compose.yml   the provider and the merchant as containers (non-root, read-only, pinned base image).
+tech/                46 beginner notes, one per technology; start at tech/README.md.
 pyproject.toml       metadata and every tool's configuration.   requirements*.lock  hash-pinned dependencies.
 Makefile             the only commands a reader needs.          .github/workflows/ci.yml  the same checks on push.
 ```
 
 The dependency rule (domain depends on nothing; application on domain; infrastructure and interfaces on both; nothing on interfaces) is enforced by `make lint` through import-linter, and a second contract forbids `domain` and `application` from importing Flask or SQLite.
+
+## Verification status of the tech/ notes
+
+The notes in `tech/` were checked against the repository: every quoted line comes from a file here, and every command that needs no container was run and its output compared. The commands that build or start containers were written while the host had no capacity (load average above 300, swap nearly full), so they were not run. pending capacity: run `docker build -t compliance-shrink-pci-scope:dev .` and `docker compose up --build`, then the container commands in [tech/docker.md](tech/docker.md), [tech/dockerfile.md](tech/dockerfile.md) and [tech/docker-compose.md](tech/docker-compose.md), compare their output with what each note says, then `docker compose down -v`. The note [tech/env-files.md](tech/env-files.md) describes the variables from `settings.py` and `docker-compose.yml` only, because `.env.example` could not be read by the tool that wrote the notes (its permission settings deny reading it).
 
 ## Author and license
 
