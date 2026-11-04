@@ -11,6 +11,24 @@ A checkout rebuilt so that card data never reaches the merchant: first the lesso
 
 **Test mode only.** Everything uses the published test card `4242 4242 4242 4242` and test keys. The program refuses a live key (`sk_live_`, `pk_live_`). Never type a real card anywhere in this project.
 
+## Architecture
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/architecture-dark.svg">
+  <img alt="The customer browser sends the card straight to the payment provider's hosted fields, while the merchant's Token only web server, Charge component, order database and request log handle tokens. Prove it scans the merchant side and writes the evidence pack; the naive web server shows the before." src="docs/diagrams/architecture.svg">
+</picture>
+
+Notice that the card path bypasses the merchant boundary entirely, so only the provider is left holding card data.
+
+## How one run flows
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/flow-dark.svg">
+  <img alt="The run posts the test card to the naive app, whose log the scan finds holding it, then sends the card to the provider instead, so a repeat charge, a refund and the proof scan all see tokens only. The amber row is the scan finding the card in the naive log." src="docs/diagrams/flow.svg">
+</picture>
+
+The run ends with verify printing OK: 7 requirements, 14 files, 0 problem(s); the amber row is the before case that the redesign removes.
+
 ## Prerequisites
 
 | Tool | Version | Used for |

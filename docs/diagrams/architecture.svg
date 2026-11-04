@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="920" viewBox="0 0 1200 920" role="img" aria-labelledby="t d">
+<title id="t">Shrink PCI scope: the card goes to the provider, the merchant holds tokens</title>
+<desc id="d">The customer browser sends the page and create-payment calls to the merchant web server, which holds tokens only and writes the order database and request log. The card details go straight from the browser to the payment provider. The charge component calls the provider with the secret key, and the provider sends a signed event back. Prove it scans the log, database and backup, and writes the evidence pack. In amber, the naive web server logs the whole card form and the scan finds it.</desc>
+<style>
+:root{--paper:#ffffff;--ink:#10243d;--mute:#52677f;--accent:#0a6aa8;--good:#19743f;--warn:#8a5a00}
+text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;fill:var(--ink)}
+.title{font-family:Georgia,'Iowan Old Style','Times New Roman',serif;font-size:36px}
+.caption{font-size:16px;fill:var(--mute)}
+.name{font-size:20px;font-weight:600}
+.lane{font-size:17px;font-weight:600}
+.sub{font-size:15px;fill:var(--mute)}
+.label{font-size:15px}
+.tag{font-size:15px;fill:var(--mute)}
+.num{font-size:15px;font-weight:700;fill:var(--paper)}
+.legend{font-size:14px;fill:var(--mute)}
+.t-accent{fill:var(--accent)}
+.t-good{fill:var(--good)}
+.t-warn{fill:var(--warn)}
+.t-ink{fill:var(--ink)}
+.b{font-weight:600}
+.paper{fill:var(--paper);stroke:var(--mute);stroke-opacity:.3}
+.grid{fill:url(#grid)}
+.boundary{fill:var(--mute);fill-opacity:.035;stroke:var(--mute);stroke-opacity:.7;stroke-dasharray:6 5}
+.svc{fill:var(--accent);fill-opacity:.08;stroke:var(--accent);stroke-width:1.25}
+.store{fill:var(--mute);fill-opacity:.1;stroke:var(--mute);stroke-width:1.25}
+.rim{fill:none;stroke:var(--mute);stroke-width:1.25}
+.actor{fill:none;stroke:var(--mute);stroke-width:1.25}
+.slot{fill:var(--accent);fill-opacity:.14;stroke:var(--accent);stroke-width:1}
+.note{fill:var(--warn);fill-opacity:.09;stroke:var(--warn);stroke-width:1}
+.win{fill:var(--good);fill-opacity:.09;stroke:var(--good);stroke-width:1}
+.hair{fill:none;stroke:var(--mute);stroke-opacity:.4;stroke-width:1}
+.zone{fill:var(--accent);fill-opacity:.045;stroke:var(--accent);stroke-width:1.25;stroke-dasharray:6 5}
+.stop{fill:none;stroke:var(--warn);stroke-width:4;stroke-linecap:round}
+.mask{fill:var(--paper)}
+.sync,.async,.read,.fail,.ok{fill:none}
+.sync{stroke:var(--accent);stroke-width:1.75;marker-end:url(#a-sync)}
+.async{stroke:var(--accent);stroke-width:1.75;stroke-dasharray:8 6;marker-end:url(#a-async)}
+.read{stroke:var(--mute);stroke-width:1.75;stroke-linecap:round;stroke-dasharray:1 6;marker-end:url(#a-read)}
+.fail{stroke:var(--warn);stroke-width:2;marker-end:url(#a-fail)}
+.ok{stroke:var(--good);stroke-width:1.75;marker-end:url(#a-ok)}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warn)}
+.dot-g{fill:var(--good)}
+.head-sync,.head-async{stroke:var(--accent)}
+.head-sync{fill:var(--accent)}
+.head-async,.head-read{fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.head-read{stroke:var(--mute)}
+.head-fail{fill:var(--warn)}
+.head-ok{fill:var(--good)}
+.gridline{fill:none;stroke:var(--mute);stroke-opacity:.09}
+</style>
+<defs>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path class="gridline" d="M40 0H0V40"/></pattern>
+<marker id="a-sync" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-sync" d="M0 0L10 5L0 10z"/></marker>
+<marker id="a-async" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-async" d="M1 1L9 5L1 9"/></marker>
+<marker id="a-read" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-read" d="M1 1L9 5L1 9"/></marker>
+<marker id="a-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-fail" d="M0 0L10 5L0 10z"/></marker>
+<marker id="a-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-ok" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<rect class="paper" x="0.5" y="0.5" width="1199" height="919" rx="16"/>
+<rect class="grid" x="1" y="1" width="1198" height="918" rx="16"/>
+<text class="title" x="48" y="68">Card data stays with the provider</text>
+<text class="caption" x="48" y="100">The card goes browser to provider. The merchant holds tokens only. Amber: the naive checkout logs the card.</text>
+<rect class="actor" x="48" y="258" width="184" height="72" rx="36"/>
+<text class="name" x="140" y="290" text-anchor="middle">Customer</text>
+<text class="sub" x="140" y="312" text-anchor="middle">browser</text>
+<rect class="boundary" x="344" y="188" width="448" height="470" rx="14"/>
+<text class="tag" x="360" y="216">Merchant (tokens only)</text>
+<rect class="svc" x="368" y="244" width="400" height="100" rx="12"/>
+<text class="name" x="384" y="276">Token only</text>
+<text class="sub" x="384" y="300">the page has no card field</text>
+<text class="sub" x="384" y="324">create-payment, done, refund, webhook</text>
+<path class="store" d="M368 452a92 12 0 0 1 184 0v64a92 12 0 0 1 -184 0z"/>
+<path class="rim" d="M368 452a92 12 0 0 0 184 0"/>
+<text class="name" x="460" y="488" text-anchor="middle">Request log</text>
+<text class="sub" x="460" y="512" text-anchor="middle">no bodies</text>
+<rect class="svc" x="568" y="428" width="200" height="100" rx="12"/>
+<text class="name" x="584" y="460">Charge</text>
+<text class="sub" x="584" y="484">HttpProvider</text>
+<text class="sub" x="584" y="508">secret key</text>
+<path class="store" d="M368 564a200 12 0 0 1 400 0v64a200 12 0 0 1 -400 0z"/>
+<path class="rim" d="M368 564a200 12 0 0 0 400 0"/>
+<text class="name" x="568" y="600" text-anchor="middle">Order database</text>
+<text class="sub" x="568" y="624" text-anchor="middle">pi_, cus_, pm_ tokens only</text>
+<rect class="svc" x="912" y="256" width="240" height="280" rx="12"/>
+<text class="name" x="928" y="288">Payment provider</text>
+<text class="sub" x="928" y="312">hosted fields, tokens</text>
+<text class="sub" x="928" y="336">provider_app.py</text>
+<text class="sub" x="928" y="358">a local stand-in</text>
+<rect class="svc" x="48" y="716" width="280" height="100" rx="12"/>
+<text class="name" x="64" y="748">Web server (naive)</text>
+<text class="sub" x="64" y="772">naive_app.py</text>
+<text class="sub" x="64" y="796">logs the whole card form</text>
+<rect class="note" x="392" y="704" width="260" height="124" rx="10"/>
+<text class="label b t-warn" x="408" y="734">make run: before</text>
+<text class="sub" x="408" y="760">3 findings in the log:</text>
+<text class="sub" x="408" y="782">number, card_number,</text>
+<text class="sub" x="408" y="804">cvv; the scan exits 1</text>
+<rect class="svc" x="696" y="716" width="200" height="100" rx="12"/>
+<text class="name" x="712" y="748">Prove it</text>
+<text class="sub" x="712" y="772">Luhn scan,</text>
+<text class="sub" x="712" y="796">HAR check</text>
+<path class="store" d="M928 744a112 12 0 0 1 224 0v86a112 12 0 0 1 -224 0z"/>
+<path class="rim" d="M928 744a112 12 0 0 0 224 0"/>
+<text class="name" x="1040" y="780" text-anchor="middle">Evidence</text>
+<text class="sub" x="1040" y="804" text-anchor="middle">scope 9 to 3 systems</text>
+<text class="sub" x="1040" y="826" text-anchor="middle">14 files, hashed</text>
+<path class="sync" d="M232 294H368"/>
+<text class="label t-accent" x="240" y="284">page</text>
+<path class="sync" d="M140 258V162Q140 150 152 150H1020Q1032 150 1032 162V256"/>
+<text class="label t-accent" x="168" y="140">card details</text>
+<path class="sync" d="M460 344V440"/>
+<text class="label t-accent" x="472" y="396">events</text>
+<path class="sync" d="M668 344V428"/>
+<text class="label t-accent" x="680" y="394">create, refund</text>
+<path class="sync" d="M560 344V552"/>
+<text class="label t-accent" x="572" y="372">tokens</text>
+<path class="async" d="M912 294H768"/>
+<text class="label t-accent" x="800" y="284">signed event</text>
+<path class="sync" d="M768 478H912"/>
+<text class="label t-accent" x="800" y="468">server calls</text>
+<path class="read" d="M796 658V716"/>
+<text class="label" x="808" y="692">log, db, backup</text>
+<path class="fail" d="M328 766H392"/>
+<path class="sync" d="M896 780H928"/>
+<path class="sync" d="M48 876H112"/><text class="legend" x="124" y="881">sync call</text>
+<path class="async" d="M264 876H328"/><text class="legend" x="340" y="881">async message</text>
+<path class="read" d="M520 876H584"/><text class="legend" x="596" y="881">read</text>
+<path class="fail" d="M696 876H760"/><text class="legend" x="772" y="881">failure path</text>
+</svg>
